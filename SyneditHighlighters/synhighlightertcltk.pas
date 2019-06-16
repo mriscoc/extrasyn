@@ -27,7 +27,7 @@ replace them with the notice and other provisions required by the GPL.
 If you do not delete the provisions above, a recipient may use your version
 of this file under either the MPL or the GPL.
 
-$Id: SynHighlighterTclTk.pas,v 1.19 2005/01/28 16:53:25 maelh Exp $
+$Id: SynHighlighterTclTk.pas,v 1.20 2019/06/06 16:53:25 maelh Exp $
 
 You may retrieve the latest version of this file at the SynEdit home page,
 located at http://SynEdit.SourceForge.net
@@ -38,7 +38,7 @@ Known Issues:
 @abstract(Provides a TCL/Tk highlighter for SynEdit)
 @author(Igor Shitikov, converted to SynEdit by David Muir <dhm@dmsoftware.co.uk>)
 @created(5 December 1999, converted to SynEdit April 18, 2000)
-@lastmod(2000-06-23)
+@lastmod(2019/06/06) MOD by M.A.R.C. for SBACreator
 The SynHighlighterTclTk unit provides SynEdit with a TCL/Tk highlighter.
 }
 
@@ -62,6 +62,7 @@ uses
 {$ELSE}
   Graphics,
   SynEditHighlighter,
+  SynEditHighlighterFoldBase,
 {$ENDIF}
   SysUtils,
   Classes;
@@ -70,12 +71,16 @@ type
   TtkTokenKind = (tkComment, tkIdentifier, tkKey, tkNull, tkNumber, tkSecondKey,
     tkSpace, tkString, tkSymbol, tkUnknown);
 
-  TRangeState = (rsUnknown, rsAnsi, rsPasStyle, rsCStyle);
+  TRangeState = (rsUnknown);
 
   TProcTableProc = procedure of object;
 
+  TBlockID = (
+    BodyBlk
+    );
+
 type
-  TSynTclTkSyn = class(TSynCustomHighlighter)
+  TSynTclTkSyn = class(TSynCustomFoldHighlighter)
   private
     fRange: TRangeState;
     fLine: PChar;
@@ -95,6 +100,7 @@ type
     fKeyWords: TStrings;
     fSecondKeys: TStrings;
     procedure BraceOpenProc;
+    procedure BraceCloseProc;
     procedure PointCommaProc;
     procedure CRProc;
     procedure IdentProc;
@@ -102,14 +108,12 @@ type
     procedure NullProc;
     procedure NumberProc;
     procedure RoundOpenProc;
+    procedure HashProc;
     procedure SlashProc;
     procedure SpaceProc;
     procedure StringProc;
     procedure UnknownProc;
     procedure MakeMethodTables;
-    procedure AnsiProc;
-    procedure PasStyleProc;
-    procedure CStyleProc;
     procedure SetKeyWords(const Value: TStrings);
     procedure SetSecondKeys(const Value: TStrings);
     function IsKeywordListStored: boolean;
@@ -209,15 +213,15 @@ begin
   for I := #0 to #255 do
   begin
     case I of
-      '_', '0'..'9', 'a'..'z', 'A'..'Z':
-        Identifiers[I] := True;
+      '_', '0'..'9', 'a'..'z', 'A'..'Z': Identifiers[I] := True;
       else
         Identifiers[I] := False;
     end;
     J := UpCase(I);
-    case I in ['_', 'a'..'z', 'A'..'Z'] of
-      True: mHashTable[I] := Ord(J) - 64
-      else mHashTable[I] := 0;
+    case I in ['_', '0'..'9', 'A'..'Z', 'a'..'z'] of
+      True: mHashTable[I] := Ord(J)
+        else
+          mHashTable[I] := 0;
     end;
   end;
 end;
@@ -274,18 +278,19 @@ var
 begin
   for I := #0 to #255 do
     case I of
-      '#': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  SlashProc;
-      '{': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  BraceOpenProc;
-      ';': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  PointCommaProc;
-      #13: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  CRProc;
-      'A'..'Z', 'a'..'z', '_': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  IdentProc;
-      #10: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  LFProc;
       #0: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  NullProc;
-      '0'..'9': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  NumberProc;
+      '#': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  HashProc;
+      '{': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  BraceOpenProc;
+      '}': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  BraceCloseProc;
+      ';': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  PointCommaProc;
       '(': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  RoundOpenProc;
+      '"': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  StringProc;
       '/': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  SlashProc;
+      #10: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  LFProc;
+      #13: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  CRProc;
+      '0'..'9': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  NumberProc;
+      'A'..'Z', 'a'..'z', '_': fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  IdentProc;
       #1..#9, #11, #12, #14..#32: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  SpaceProc;
-      #34: fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  StringProc;
     else
       fProcTable[I] :=  {$IFDEF FPC}@{$ENDIF}  UnknownProc;
     end;
@@ -348,127 +353,25 @@ end;
 
 procedure TSynTclTkSyn.SetLine(const NewValue: String; LineNumber:Integer);
 begin
+  inherited;
   fLine := PChar(NewValue);
   Run := 0;
   fLineNumber := LineNumber;
   Next;
 end; { SetLine }
 
-procedure TSynTclTkSyn.AnsiProc;
-begin
-  fTokenID := tkComment;
-  case FLine[Run] of
-    #0:
-      begin
-        NullProc;
-        exit;
-      end;
-    #10:
-      begin
-        LFProc;
-        exit;
-      end;
-
-    #13:
-      begin
-        CRProc;
-        exit;
-      end;
-  end;
-
-  while fLine[Run] <> #0 do
-    case fLine[Run] of
-      '*':
-        if fLine[Run + 1] = ')' then
-        begin
-          fRange := rsUnKnown;
-          inc(Run, 2);
-          break;
-        end else inc(Run);
-      #10: break;
-
-      #13: break;
-    else inc(Run);
-    end;
-end;
-
-procedure TSynTclTkSyn.PasStyleProc;
-begin
-  fTokenID := tkComment;
-  case FLine[Run] of
-    #0:
-      begin
-        NullProc;
-        exit;
-      end;
-    #10:
-      begin
-        LFProc;
-        exit;
-      end;
-
-    #13:
-      begin
-        CRProc;
-        exit;
-      end;
-  end;
-
-  while FLine[Run] <> #0 do
-    case FLine[Run] of
-      '}':
-        begin
-          fRange := rsUnKnown;
-          inc(Run);
-          break;
-        end;
-      #10: break;
-
-      #13: break;
-    else inc(Run);
-    end;
-end;
-
-procedure TSynTclTkSyn.CStyleProc;
-begin
-  fTokenID := tkComment;
-  case FLine[Run] of
-    #0:
-      begin
-        NullProc;
-        exit;
-      end;
-    #10:
-      begin
-        LFProc;
-        exit;
-      end;
-
-    #13:
-      begin
-        CRProc;
-        exit;
-      end;
-  end;
-
-  while fLine[Run] <> #0 do
-    case fLine[Run] of
-      '*':
-        if fLine[Run + 1] = '/' then
-        begin
-          fRange := rsUnKnown;
-          inc(Run, 2);
-          break;
-        end else inc(Run);
-      #10: break;
-
-      #13: break;
-    else inc(Run);
-    end;
-end;
-
 procedure TSynTclTkSyn.BraceOpenProc;
 begin
+  inc(Run);
+  fTokenID := tkSymbol;
+  StartCodeFoldBlock(Pointer(PtrUInt(BodyBlk)));
+end;
+
+procedure TSynTclTkSyn.BraceCloseProc;
+var Blk:TBlockID;
+begin
+  blk:=TBlockID(PtrUInt(TopCodeFoldBlockType));
+  if blk=BodyBlk then EndCodeFoldBlock();
   inc(Run);
   fTokenID := tkSymbol;
 end;
@@ -482,10 +385,8 @@ end;
 procedure TSynTclTkSyn.CRProc;
 begin
   fTokenID := tkSpace;
-  Case FLine[Run + 1] of
-    #10: inc(Run, 2);
-  else inc(Run);
-  end;
+  Inc(Run);
+  if fLine[Run + 1] = #10 then Inc(Run);
 end;
 
 procedure TSynTclTkSyn.IdentProc;
@@ -494,8 +395,7 @@ begin
   if IsKeyWord(GetToken) then begin
     fTokenId := tkKey;
     Exit;
-  end
-  else fTokenId := tkIdentifier;
+  end else fTokenId := tkIdentifier;
   if IsSecondKeyWord(GetToken)
     then fTokenId := tkSecondKey
     else fTokenId := tkIdentifier;
@@ -516,7 +416,7 @@ procedure TSynTclTkSyn.NumberProc;
 begin
   inc(Run);
   fTokenID := tkNumber;
-  while FLine[Run] in ['0'..'9', '.', 'e', 'E'] do
+  while FLine[Run] in ['0'..'9', '.', 'a'..'f', 'A'..'F', 'x', 'X'] do
   begin
     case FLine[Run] of
       '.':
@@ -532,38 +432,22 @@ begin
   fTokenId := tkSymbol;
 end;
 
+procedure TSynTclTkSyn.HashProc;
+begin
+  fTokenID := tkComment;
+  while FLine[Run] <> #0 do
+  begin
+    case FLine[Run] of
+      #10, #13: break;
+    end;
+    inc(Run);
+  end;
+end;
+
 procedure TSynTclTkSyn.SlashProc;
 begin
-  case FLine[Run + 1] of
-    '/':
-      begin
-        inc(Run, 2);
-        fTokenID := tkComment;
-        while FLine[Run] <> #0 do
-        begin
-          case FLine[Run] of
-            #10, #13: break;
-          end;
-          inc(Run);
-        end;
-      end;
-    '*':
-      begin
-        inc(Run);
-        fTokenId := tkSymbol;
-      end;
-  else
-    begin
-      fTokenID := tkComment;
-      while FLine[Run] <> #0 do
-      begin
-        case FLine[Run] of
-          #10, #13: break;
-        end;
-        inc(Run);
-      end;
-    end;
-  end;
+  inc(Run);
+  fTokenID := tkSymbol;
 end;
 
 procedure TSynTclTkSyn.SpaceProc;
@@ -594,20 +478,18 @@ begin
     Inc(Run, 2)
   else
 {$ENDIF}
+//  inc(Run);
+//  fTokenID := tkUnKnown;
   inc(Run);
-  fTokenID := tkUnKnown;
+  while (fLine[Run] in [#128..#191]) OR // continued utf8 subcode
+   ((fLine[Run]<>#0) and (fProcTable[fLine[Run]] = @UnknownProc)) do inc(Run);
+  fTokenID := tkUnknown;
 end;
 
 procedure TSynTclTkSyn.Next;
 begin
   fTokenPos := Run;
-  case fRange of
-    rsAnsi: AnsiProc;
-    rsPasStyle: PasStyleProc;
-    rsCStyle: CStyleProc;
-  else
-    fProcTable[fLine[Run]];
-  end;
+  fProcTable[fLine[Run]];
 end;
 
 function TSynTclTkSyn.GetDefaultAttribute(Index: integer): TSynHighlighterAttributes;
@@ -626,13 +508,13 @@ end;
 
 function TSynTclTkSyn.GetEol: Boolean;
 begin
-  Result := False;
-  if fTokenId = tkNull then Result := True;
+  Result := fTokenID = tkNull;
 end;
 
 function TSynTclTkSyn.GetRange: Pointer;
 begin
-  Result := Pointer(PtrInt(fRange));
+  CodeFoldRange.RangeType := Pointer(PtrInt(fRange));
+  Result := inherited;
 end;
 
 function TSynTclTkSyn.GetToken: string;
@@ -677,12 +559,15 @@ end;
 
 procedure TSynTclTkSyn.ResetRange;
 begin
+  inherited;
   fRange := rsUnknown;
 end;
 
 procedure TSynTclTkSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrUInt(Value));
+//  fRange := TRangeState(PtrUInt(Value));
+  inherited;
+  fRange := TRangeState(PtrUInt(CodeFoldRange.RangeType));
 end;
 
 procedure TSynTclTkSyn.SetKeyWords(const Value: TStrings);
