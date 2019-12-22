@@ -198,6 +198,10 @@ ResourceString
   SYNS_FilterLDraw       = 'LEGO LDraw Files (*.ldr)|*.ldr';
   SYNS_FilterLua         = 'Lua Script File (*.Lua)|*.Lua';
   SYNS_FilterProlog      = 'Prolog Files (*.pl;*.pro;*.prl)|*.pl;*.pro;*.prl';
+  SYNS_FilterVHDL        = 'VHDL Files (*.vhd;*.vhdl)|*.vhd;*.vhdl';
+  SYNS_FilterVerilog     = 'Verilog Files (*.v;*.vl;*.ver)|*.v;*.vl;*.ver';
+  SYNS_FilterJSON        = 'JSON Files (*.json)|*.json';
+
   //SYNS_FilterX86Assembly = 'x86 Assembly Files (*.asm)|*.asm';
   //SYNS_FilterPascal = 'Pascal Files (*.pas;*.pp;*.dpr;*.dpk;*.inc)|*.pas;*.pp;*.dpr;*.dpk;*.inc';
   //SYNS_FilterHP48 = 'HP48 Files (*.s;*.sou;*.a;*.hp)|*.s;*.sou;*.a;*.hp';
@@ -265,6 +269,9 @@ ResourceString
   SYNS_LangLua     = 'Lua Script';
   SYNS_Lang8051    = '8051 Assembler';
   SYNS_LangProlog  = 'Prolog';
+  SYNS_LangVHDL    = 'VHDL';
+  SYNS_LangVerilog = 'Verilog';
+  SYNS_LangJSON    = 'JSON';
   //SYNS_LangHP48 = 'HP48';
   //SYNS_LangCAClipper = 'CA-Clipper';
   //SYNS_LangCPM = 'COAS Product Manager Report';

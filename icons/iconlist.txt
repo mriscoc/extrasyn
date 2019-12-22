@@ -115,3 +115,13 @@ tsynvbscriptsyn_200.png
 tsynvrml97syn.png
 tsynvrml97syn_150.png
 tsynvrml97syn_200.png
+tsynvhdlsyn.png
+tsynvhdlsyn_150.png
+tsynvhdlsyn_200.png
+tsynverilogsyn.png
+tsynverilogsyn_150.png
+tsynverilogsyn_200.png
+tsynjsonsyn.png
+tsynjsonsyn_150.png
+tsynjsonsyn_200.png
+

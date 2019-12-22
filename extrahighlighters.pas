@@ -20,7 +20,8 @@ uses
   SynHighlighterRC, SynHighlighterRuby, SynHighlighterSDD, SynHighlighterSml, 
   SynHighlighterTclTk, SynHighlighterUnreal, SynHighlighterVBScript, 
   SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI, 
-  SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot;
+  SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot, 
+  SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON;
 
 implementation
 

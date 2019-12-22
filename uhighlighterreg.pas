@@ -28,6 +28,7 @@ uses
   SynHighlighterHP48,
   SynHighlighterIDL,
   SynHighlighterInno,
+  SynHighlighterJSON,
   SynHighlighterKix,
   SynHighlighterLDraw,
   SynHighlighterLua,
@@ -42,6 +43,8 @@ uses
   SynHighlighterTclTk,
   SynHighlighterUnreal,
   SynHighlighterVBScript,
+  SynHighlighterVerilog,
+  SynHighlighterVHDL,
   SynHighlighterVrml97;
 
 procedure Register;
@@ -78,6 +81,7 @@ begin
     TSynHP48Syn,
     TSynIdlSyn,
     TSynInnoSyn,
+    TSynJSONSyn,
     TSynKixSyn,
     TSynLDRSyn,
     TSynLuaSyn,
@@ -92,6 +96,8 @@ begin
     TSynTclTkSyn,
     TSynUnrealSyn,
     TSynVBScriptSyn,
+    TSynVerilogSyn,
+    TSynVHDLSyn,
     TSynVrml97Syn
   ]);
 end;

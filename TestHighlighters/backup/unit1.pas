@@ -16,7 +16,7 @@ uses
   SynHighlighterAsm,      SynHighlighterDOT,     SynHighlighterIDL,     SynHighlighterKix,     {SynHighlighterMsg,}
   SynHighlighterSDD,      SynHighlighterSml,     SynHighlighterURI,     SynHighlighterM3,       SynHighlighterRC,
   SynHighlighterST,       SynHighlighter8051,    SynHighlighterLua,     SynHighlighterProlog,   SynHighlighterCAC,
-  SynHighlighterAWK, SynHighlighterGnuplot;
+  SynHighlighterAWK,      SynHighlighterGnuplot, SynHighlighterVHDL,    SynHighlighterVerilog;
 
 //   SynHighlighterGeneral;
 
@@ -131,6 +131,8 @@ begin
   FHighlighters.Add(TSynCACSyn.Create(Self));
   FHighlighters.Add(TSynSTSyn.Create(self));
   FHighlighters.Add(TSynGnuplotSyn.Create(self));
+  FHighlighters.Add(TSynVHDLSyn.Create(Self));
+  FHighlighters.Add(TSynVerilogSyn.Create(Self));
 
 //  FHighlighters.Add(TSynCPMSyn.Create(self));
 //  FHighlighters.Add(TSynGeneralSyn.Create(self));
