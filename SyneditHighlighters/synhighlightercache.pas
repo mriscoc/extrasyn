@@ -313,7 +313,7 @@ uses
 {$IFDEF SYN_CLX}
   QSynEditStrConst;
 {$ELSE}
-  SynEditStrConst;
+  SynEditStrConst, SynEditStrConstExtra;
 {$ENDIF}
 
 var
