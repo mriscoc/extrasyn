@@ -5,7 +5,7 @@ ExtraSyn
 This package contains about many highlighters for SynEdit, such as ruby, haskel, 
 eiffel, fortran, modula 3, CA-Clipper, prolog, cobol, gnuplot, etc. 
 
-This work is forked from the original work at:
+This work is a fork of the original work at:
 https://gitlab.com/freepascal.org/lazarus/lazarus/-/issues/18248.
 
 There is a runtime and designtime package: compile the runtime package 
