@@ -121,6 +121,9 @@ tsynvhdlsyn_200.png
 tsynverilogsyn.png
 tsynverilogsyn_150.png
 tsynverilogsyn_200.png
+tsynsmalisyn.png
+tsynsmalisyn_150.png
+tsynsmalisyn_200.png
 tsynjsonsyn.png
 tsynjsonsyn_150.png
 tsynjsonsyn_200.png

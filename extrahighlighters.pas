@@ -21,7 +21,8 @@ uses
   SynHighlighterTclTk, SynHighlighterUnreal, SynHighlighterVBScript, 
   SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI, 
   SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot, 
-  SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON;
+  SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON, 
+  SynHighlighterSmali;
 
 implementation
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters"/>
     <Author Value="Various authors, see each highlighter source file for more info."/>
@@ -19,8 +19,8 @@
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>
-    <Version Major="1" Minor="1"/>
-    <Files Count="43">
+    <Version Major="1" Minor="3" Release="1"/>
+    <Files Count="44">
       <Item1>
         <Filename Value="SyneditHighlighters\syneditstrconstextra.pas"/>
         <UnitName Value="SynEditStrConstExtra"/>
@@ -194,7 +194,12 @@
         <Filename Value="SyneditHighlighters\synhighlighterjson.pas"/>
         <UnitName Value="SynHighlighterJSON"/>
       </Item43>
+      <Item44>
+        <Filename Value="SyneditHighlighters\synhighlightersmali.pas"/>
+        <UnitName Value="SynHighlighterSmali"/>
+      </Item44>
     </Files>
+    <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="SynEdit"/>

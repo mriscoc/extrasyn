@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters_Dsgn"/>
     <Type Value="DesignTime"/>
@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL, LGPL DUAL license."/>
-    <Version Major="1" Minor="1"/>
+    <Version Major="1" Minor="3" Release="1"/>
     <Files Count="1">
       <Item1>
         <Filename Value="uhighlighterreg.pas"/>
@@ -22,6 +22,7 @@
         <UnitName Value="uHighlighterReg"/>
       </Item1>
     </Files>
+    <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="ExtraHighlighters"/>
