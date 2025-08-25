@@ -159,7 +159,7 @@ type
 implementation
 
 uses
-  SynEditStrConst;
+  SynEditStrConst, SynEditStrConstExtra;
 
 var
   Identifiers: array[#0..#255] of ByteBool;
