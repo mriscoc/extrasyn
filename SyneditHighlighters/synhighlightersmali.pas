@@ -384,7 +384,7 @@ begin
 
   MakeMethodTables;
   fRange := rsUnknown;
-  fDefaultFilter := 'Smali Files (*.smali)|*.smali';
+  fDefaultFilter := SYNS_FilterSmali;
 end;
 
 destructor TSynSmaliSyn.Destroy;
@@ -666,7 +666,7 @@ end;
 
 class function TSynSmaliSyn.GetLanguageName: string;
 begin
-  Result := 'Smali';
+  Result := SYNS_LangSmali;
 end;
 
 function TSynSmaliSyn.GetSampleSource: string;

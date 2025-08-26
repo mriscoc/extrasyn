@@ -76,6 +76,9 @@ tsynluasyn_200.png
 tsynm3syn.png
 tsynm3syn_150.png
 tsynm3syn_200.png
+tsynmarkdownsyn.png
+tsynmarkdownsyn_150.png
+tsynmarkdownsyn_200.png
 tsynmodelicasyn.png
 tsynmodelicasyn_150.png
 tsynmosyn_200.png

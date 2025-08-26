@@ -252,6 +252,8 @@ ResourceString
   //SYNS_FilterUNIXShellScript = 'UNIX Shell Scripts (*.sh)|*.sh';
   //SYNS_FilterURI = 'All Files (*.*)|*.*';
   //SYNS_FilterVrml97 = 'Vrml97/X3D World (*.wrl;*.wrml;*.vrl;*.vrml;*.x3d)|*.wrl;*.wrml;*.vrl;*.vrml;*.x3d';
+  SYNS_FilterSmali = 'Smali Files (*.smali)|*.smali';
+  SYNS_FilterMarkdown = 'Markdown Files (*.md;*.markdown)|*.md;*.markdown';
 
   //// Language names. Maybe somebody wants them translated / more detailed...
 
@@ -295,6 +297,8 @@ ResourceString
   //SYNS_LangSQL = 'SQL';
   SYNS_LangGembase = 'Gembase';
   //SYNS_LangINI = 'INI';
+  SYNS_LangSmali = 'Smali';
+  SYNS_LangMarkdown = 'Markdown';
   SYNS_LangSML = 'Standard ML';
   //SYNS_LangVisualBASIC = 'Visual Basic';
   SYNS_LangADSP21xx = 'ADSP21xx';
