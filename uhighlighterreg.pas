@@ -46,7 +46,8 @@ uses
   SynHighlighterVBScript,
   SynHighlighterVerilog,
   SynHighlighterVHDL,
-  SynHighlighterVrml97;
+  SynHighlighterVrml97,
+  SynHighlighterMarkdown;
 
 procedure Register;
 
@@ -100,7 +101,8 @@ begin
     TSynVBScriptSyn,
     TSynVerilogSyn,
     TSynVHDLSyn,
-    TSynVrml97Syn
+    TSynVrml97Syn,
+    TSynMarkdownSyn
   ]);
 end;
 

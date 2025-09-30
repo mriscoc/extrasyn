@@ -11,10 +11,31 @@
       <SearchPaths>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <IncludeAssertionCode Value="True"/>
+        </SyntaxOptions>
+      </Parsing>
+      <CodeGeneration>
+        <Checks>
+          <IOChecks Value="True"/>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+          <StackChecks Value="True"/>
+        </Checks>
+        <VerifyObjMethodCallValidity Value="True"/>
+      </CodeGeneration>
+      <Linking>
+        <Debugging>
+          <UseHeaptrc Value="True"/>
+          <TrashVariables Value="True"/>
+          <UseExternalDbgSyms Value="True"/>
+        </Debugging>
+      </Linking>
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL, LGPL DUAL license."/>
-    <Version Major="1" Minor="3" Release="1"/>
+    <Version Major="1" Minor="4" Release="1"/>
     <Files Count="1">
       <Item1>
         <Filename Value="uhighlighterreg.pas"/>

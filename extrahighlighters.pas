@@ -8,21 +8,21 @@ unit ExtraHighlighters;
 interface
 
 uses
-  SynEditStrConstExtra, SynHighlighterADSP21xx, SynHighlighterAsm,
-  SynHighlighterAWK, SynHighlighterBaan, SynHighlighterCAC,
-  SynHighlighterCache, SynHighlighterCobol, SynHighlighterCS,
-  SynHighlighterDml, SynHighlighterDOT, SynHighlighterEiffel,
-  SynHighlighterFortran, SynHighlighterFoxpro, SynHighlighterGalaxy,
-  SynHighlighterGWS, SynHighlighterHaskell, SynHighlighterHP48,
-  SynHighlighterIDL, SynHighlighterInno, SynHighlighterKix,
-  SynHighlighterLDraw, SynHighlighterLua, SynHighlighterM3,
-  SynHighlighterModelica, SynHighlighterProgress, SynHighlighterProlog,
-  SynHighlighterRC, SynHighlighterRuby, SynHighlighterSDD, SynHighlighterSml,
-  SynHighlighterTclTk, SynHighlighterUnreal, SynHighlighterVBScript,
-  SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI,
-  SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot,
-  SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON,
-  SynHighlighterSmali;
+  SynEditStrConstExtra, SynHighlighterADSP21xx, SynHighlighterAsm, 
+  SynHighlighterAWK, SynHighlighterBaan, SynHighlighterCAC, 
+  SynHighlighterCache, SynHighlighterCobol, SynHighlighterCS, 
+  SynHighlighterDml, SynHighlighterDOT, SynHighlighterEiffel, 
+  SynHighlighterFortran, SynHighlighterFoxpro, SynHighlighterGalaxy, 
+  SynHighlighterGWS, SynHighlighterHaskell, SynHighlighterHP48, 
+  SynHighlighterIDL, SynHighlighterInno, SynHighlighterKix, 
+  SynHighlighterLDraw, SynHighlighterLua, SynHighlighterM3, 
+  SynHighlighterModelica, SynHighlighterProgress, SynHighlighterProlog, 
+  SynHighlighterRC, SynHighlighterRuby, SynHighlighterSDD, SynHighlighterSml, 
+  SynHighlighterTclTk, SynHighlighterUnreal, SynHighlighterVBScript, 
+  SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI, 
+  SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot, 
+  SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON, 
+  SynHighlighterSmali, SynHighlighterMarkdown;
 
 implementation
 

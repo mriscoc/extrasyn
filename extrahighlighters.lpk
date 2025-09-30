@@ -11,6 +11,26 @@
         <OtherUnitFiles Value="SyneditHighlighters"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <IncludeAssertionCode Value="True"/>
+        </SyntaxOptions>
+      </Parsing>
+      <CodeGeneration>
+        <Checks>
+          <IOChecks Value="True"/>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+          <StackChecks Value="True"/>
+        </Checks>
+        <VerifyObjMethodCallValidity Value="True"/>
+      </CodeGeneration>
+      <Linking>
+        <Debugging>
+          <UseHeaptrc Value="True"/>
+          <TrashVariables Value="True"/>
+        </Debugging>
+      </Linking>
       <Other>
         <CompilerMessages>
           <IgnoredMessages idx5027="True" idx5024="True" idx4055="True"/>
@@ -19,8 +39,8 @@
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>
-    <Version Major="1" Minor="3" Release="1"/>
-    <Files Count="44">
+    <Version Major="1" Minor="4" Release="1"/>
+    <Files Count="45">
       <Item1>
         <Filename Value="SyneditHighlighters\syneditstrconstextra.pas"/>
         <UnitName Value="SynEditStrConstExtra"/>
@@ -198,6 +218,10 @@
         <Filename Value="SyneditHighlighters\synhighlightersmali.pas"/>
         <UnitName Value="SynHighlighterSmali"/>
       </Item44>
+      <Item45>
+        <Filename Value="SyneditHighlighters\SynHighlighterMarkdown.pas"/>
+        <UnitName Value="SynHighlighterMarkdown"/>
+      </Item45>
     </Files>
     <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="2">
