@@ -280,7 +280,7 @@ end;
 
 function TSynMarkdownSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrUInt(fRange));
 end;
 
 function TSynMarkdownSyn.GetTokenID: TtkTokenKind;
@@ -817,7 +817,7 @@ end;
 
 procedure TSynMarkdownSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynMarkdownSyn.IsFilterStored: Boolean;
