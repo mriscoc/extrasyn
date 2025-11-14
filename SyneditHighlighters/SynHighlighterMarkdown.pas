@@ -413,7 +413,13 @@ begin
   while fLine[Run+Count] = '*' do
     Inc(Count);
 
-  if Count = 3 then
+  if Count >= 4 then
+  begin
+    // Treat 4 or more asterisk as symbols
+    fTokenID := tkSymbol;
+    Inc(Run, Count);  // Include all underscores in the token
+  end
+  else if Count = 3 then
   begin
     // Bold+Italic
     fTokenID := tkBold;
@@ -593,7 +599,13 @@ begin
   while fLine[Run+Count] = '_' do
     Inc(Count);
 
-  if Count = 3 then
+  if Count >= 4 then
+  begin
+    // Treat 4 or more underscores as symbols
+    fTokenID := tkSymbol;
+    Inc(Run, Count);  // Include all underscores in the token
+  end
+  else if Count = 3 then
   begin
     // Bold+Italic
     fTokenID := tkBold;
