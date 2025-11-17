@@ -721,13 +721,13 @@ begin
   fTokenID := tkText;
 
   // Check if we're already at a special character
-  if fLine[Run] in [#0, #10, #13, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'] then
+  if fLine[Run] in [#0, #10, #13, #32, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'] then
     inc(Run)  // Must advance at least one character
   else
   begin
     repeat
       Inc(Run);
-    until fLine[Run] in [#0, #10, #13, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'];
+    until fLine[Run] in [#0, #10, #13, #32, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'];
   end;
 end;
 
