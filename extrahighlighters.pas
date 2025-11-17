@@ -22,7 +22,7 @@ uses
   SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI, 
   SynHighlighterST, SynHighlighterGeneral, synhighlightergnuplot, 
   SynHighlighterVHDL, synhighlighterverilog, SynHighlighterJSON, 
-  SynHighlighterSmali, SynHighlighterMarkdown;
+  SynHighlighterSmali, SynHighlighterMarkdown, SynExportHTMLCSS;
 
 implementation
 

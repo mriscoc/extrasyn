@@ -40,7 +40,7 @@
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>
     <Version Major="1" Minor="4" Release="2" Build="5"/>
-    <Files Count="45">
+    <Files Count="46">
       <Item1>
         <Filename Value="SyneditHighlighters\syneditstrconstextra.pas"/>
         <UnitName Value="SynEditStrConstExtra"/>
@@ -222,6 +222,10 @@
         <Filename Value="SyneditHighlighters\SynHighlighterMarkdown.pas"/>
         <UnitName Value="SynHighlighterMarkdown"/>
       </Item45>
+      <Item46>
+        <Filename Value="SyneditHighlighters\synexporthtmlcss.pas"/>
+        <UnitName Value="SynExportHTMLCSS"/>
+      </Item46>
     </Files>
     <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="2">
