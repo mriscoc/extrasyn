@@ -48,6 +48,9 @@ type
     tkHeader,
     tkBold,
     tkItalic,
+    tkBoldItalic,
+    tkStrikeOut,
+    tkUnderline,
     tkCode,
     tkCodeBlock,
     tkBlockQuote,
@@ -58,6 +61,7 @@ type
     tkSpace,
     tkSymbol,
     tkComment,
+    tkMark,
     tkNull
   );
 
@@ -79,6 +83,9 @@ type
     fHeaderAttri: TSynHighlighterAttributes;
     fBoldAttri: TSynHighlighterAttributes;
     fItalicAttri: TSynHighlighterAttributes;
+    fBoldItalicAttri: TSynHighlighterAttributes;
+    fStrikeOutAttri: TSynHighlighterAttributes;
+    fUnderlineAttri: TSynHighlighterAttributes;
     fCodeAttri: TSynHighlighterAttributes;
     fCodeBlockAttri: TSynHighlighterAttributes;
     fBlockQuoteAttri: TSynHighlighterAttributes;
@@ -89,10 +96,12 @@ type
     fSpaceAttri: TSynHighlighterAttributes;
     fSymbolAttri: TSynHighlighterAttributes;
     fCommentAttri: TSynHighlighterAttributes;
+    fMarkAttri: TSynHighlighterAttributes;
 
     procedure MakeMethodTables;
     procedure AtSignProc;
     procedure BacktickProc;
+    procedure BackslashProc;
     procedure BraceOpenProc;
     procedure BraceCloseProc;
     procedure BracketOpenProc;
@@ -106,7 +115,6 @@ type
     procedure ExclamationProc;
     procedure UnderscoreProc;
     procedure TildeProc;
-    procedure PipeProc;
     procedure LessThanProc;
     procedure CRProc;
     procedure LFProc;
@@ -115,7 +123,10 @@ type
     procedure IdentProc;
     procedure CodeBlockProc;
     procedure CommentProc;
+    procedure MarkProc;
     procedure LinkImageProc(ImageFlag: Boolean);
+    procedure FormatProc(SYM:char);
+    procedure TwoSymbolsProc(SYM:char; tkFormat:TtkTokenKind);
   protected
     function GetSampleSource: string; override;
     function IsFilterStored: Boolean; override;
@@ -142,6 +153,9 @@ type
     property HeaderAttri: TSynHighlighterAttributes read fHeaderAttri write fHeaderAttri;
     property BoldAttri: TSynHighlighterAttributes read fBoldAttri write fBoldAttri;
     property ItalicAttri: TSynHighlighterAttributes read fItalicAttri write fItalicAttri;
+    property BoldItalicAttri: TSynHighlighterAttributes read fBoldItalicAttri write fBoldItalicAttri;
+    property StrikeOutAttri: TSynHighlighterAttributes read fStrikeOutAttri write fStrikeOutAttri;
+    property UnderlineAttri: TSynHighlighterAttributes read fUnderlineAttri write fUnderlineAttri;
     property CodeAttri: TSynHighlighterAttributes read fCodeAttri write fCodeAttri;
     property CodeBlockAttri: TSynHighlighterAttributes read fCodeBlockAttri write fCodeBlockAttri;
     property BlockQuoteAttri: TSynHighlighterAttributes read fBlockQuoteAttri write fBlockQuoteAttri;
@@ -152,6 +166,7 @@ type
     property SpaceAttri: TSynHighlighterAttributes read fSpaceAttri write fSpaceAttri;
     property SymbolAttri: TSynHighlighterAttributes read fSymbolAttri write fSymbolAttri;
     property CommentAttri: TSynHighlighterAttributes read fCommentAttri write fCommentAttri;
+    property MarkAttri: TSynHighlighterAttributes read fMarkAttri write fMarkAttri;
   end;
 
 implementation
@@ -170,6 +185,7 @@ begin
       #13 : fProcTable[I] := @CRProc;
       '@' : fProcTable[I] := @AtSignProc;
       '`' : fProcTable[I] := @BacktickProc;
+      '\' : fProcTable[I] := @BackslashProc;
       '{' : fProcTable[I] := @BraceOpenProc;
       '}' : fProcTable[I] := @BraceCloseProc;
       '[' : fProcTable[I] := @BracketOpenProc;
@@ -183,8 +199,8 @@ begin
       '!' : fProcTable[I] := @ExclamationProc;
       '_' : fProcTable[I] := @UnderscoreProc;
       '~' : fProcTable[I] := @TildeProc;
-      '|' : fProcTable[I] := @PipeProc;
       '<' : fProcTable[I] := @LessThanProc;
+      '=' : fProcTable[I] := @MarkProc;
       #1..#9, #11, #12, #14..#32:
         fProcTable[I] := @SpaceProc;
       else
@@ -211,6 +227,18 @@ begin
   fItalicAttri := TSynHighlighterAttributes.Create('Italic');
   fItalicAttri.Style := [fsItalic];
   AddAttribute(fItalicAttri);
+
+  fBoldItalicAttri := TSynHighlighterAttributes.Create('BoldItalic');
+  fBoldItalicAttri.Style := [fsBold, fsItalic];
+  AddAttribute(fBoldItalicAttri);
+
+  fStrikeOutAttri := TSynHighlighterAttributes.Create('StrikeOut');
+  fStrikeOutAttri.Style := [fsStrikeOut];
+  AddAttribute(fStrikeOutAttri);
+
+  fUnderlineAttri := TSynHighlighterAttributes.Create('Underline');
+  fUnderlineAttri.Style := [fsUnderline];
+  AddAttribute(fUnderlineAttri);
 
   fCodeAttri := TSynHighlighterAttributes.Create('Code');
   fCodeAttri.Foreground := clMaroon;
@@ -241,6 +269,10 @@ begin
   fImageAttri := TSynHighlighterAttributes.Create('Image');
   fImageAttri.Foreground := clGreen;
   AddAttribute(fImageAttri);
+
+  fMarkAttri := TSynHighlighterAttributes.Create('Mark');
+  fMarkAttri.Background := clYellow;
+  AddAttribute(fMarkAttri);
 
   fSpaceAttri := TSynHighlighterAttributes.Create(SYNS_AttrSpace);
   AddAttribute(fSpaceAttri);
@@ -297,6 +329,9 @@ begin
     tkHeader: Result := fHeaderAttri;
     tkBold: Result := fBoldAttri;
     tkItalic: Result := fItalicAttri;
+    tkBoldItalic: Result := fBoldItalicAttri;
+    tkStrikeOut: Result := fStrikeOutAttri;
+    tkUnderline: Result := fUnderlineAttri;
     tkCode: Result := fCodeAttri;
     tkCodeBlock: Result := fCodeBlockAttri;
     tkBlockQuote: Result := fBlockQuoteAttri;
@@ -307,6 +342,7 @@ begin
     tkSpace: Result := fSpaceAttri;
     tkSymbol: Result := fSymbolAttri;
     tkComment: Result := fCommentAttri;
+    tkMark: Result := fMarkAttri;
     else Result := fTextAttri;
   end;
 end;
@@ -325,6 +361,77 @@ procedure TSynMarkdownSyn.Next;
 begin
   fTokenPos := Run;
   fProcTable[fLine[Run]]();
+end;
+
+procedure TSynMarkdownSyn.TwoSymbolsProc(SYM:char; tkFormat:TtkTokenKind);
+begin
+  if (fLine[Run+1] = SYM) and (fLine[Run+2] <> SYM) and (not (fLine[Run+2] in [#0, #10, #13])) then
+  begin
+    fTokenID := tkFormat;
+    inc(Run, 2);
+    while not (fLine[Run] in [#0, #10, #13]) and not ((fLine[Run] = SYM) and (fLine[Run+1] = SYM)) do
+      inc(Run);
+    if (fLine[Run] = SYM) and (fLine[Run+1] = SYM) then
+      inc(Run, 2);
+  end
+  else
+  begin
+    fTokenID := tkSymbol;
+    inc(Run);
+  end;
+end;
+
+procedure TSynMarkdownSyn.FormatProc(SYM:char);
+var
+  Count, StartPos, ClosingPos: Integer;
+  ValidStart, ValidEnd: Boolean;
+
+  function IsEnd(ch:char):boolean;
+  begin
+    result:= (ch in [#0, #10, #13, ' ']);
+  end;
+
+begin
+  fTokenID := tkText;
+  // List item
+  if (Run = 0) and (fLine[Run+1] = #32) then
+  begin
+    fTokenID := tkListItem;
+    inc(Run);
+    Exit;
+  end;
+  StartPos := Run;
+  Count := 0;
+  while fLine[Run+Count] = SYM do
+    Inc(Count);
+  ValidStart := (Count <= 3) and not IsEnd(fLine[StartPos + Count]);
+  if ValidStart then
+    Inc(Run, Count) // Move past the opening Symbols
+  else begin
+    Inc(Run);
+    Exit;
+  end;
+  ClosingPos := Run;
+  ValidEnd := false;
+  while not (ValidEnd or (fLine[ClosingPos] in [#0, #10, #13])) do
+  begin
+    if (fLine[ClosingPos] = SYM) then
+    case Count of
+      1: ValidEnd := not (fLine[ClosingPos - 1] = ' ') and IsEnd(fLine[ClosingPos + Count]);
+      2: ValidEnd := not (fLine[ClosingPos - 1] = ' ') and (fLine[ClosingPos + 1] = SYM) and IsEnd(fLine[ClosingPos + Count]);
+      3: ValidEnd := not (fLine[ClosingPos - 1] = ' ') and (fLine[ClosingPos + 1] = SYM) and (fLine[ClosingPos + 2] = SYM) and IsEnd(fLine[ClosingPos + Count]);
+    end;
+    Inc(ClosingPos);
+  end;
+  if ValidStart and ValidEnd then
+  begin
+    case Count of
+      1: fTokenID := tkItalic;
+      2: fTokenID := tkBold;
+      3: fTokenID := tkBoldItalic;
+    end;
+    Run := ClosingPos + Count - 1; // Move past the closing Symbols
+  end else Run := StartPos + 1;
 end;
 
 procedure TSynMarkdownSyn.AtSignProc;
@@ -351,6 +458,16 @@ begin
   end;
 end;
 
+procedure TSynMarkdownSyn.BackslashProc;
+begin
+  // Backslash-escaped
+  if not (fLine[Run + 1] in [#0, #10, #13]) then
+  begin
+    fTokenID := tkText;
+    Inc(Run,2);
+  end;
+end;
+
 procedure TSynMarkdownSyn.CodeBlockProc;
 begin
   fTokenID := tkCodeBlock;
@@ -370,7 +487,6 @@ begin
     Inc(Run);
   end;
 end;
-
 
 procedure TSynMarkdownSyn.BraceOpenProc;
 begin
@@ -405,62 +521,8 @@ begin
 end;
 
 procedure TSynMarkdownSyn.StarProc;
-var
-  Count: Integer;
 begin
-  // Count consecutive stars
-  Count := 1;
-  while fLine[Run+Count] = '*' do
-    Inc(Count);
-
-  if Count >= 4 then
-  begin
-    // Treat 4 or more asterisk as symbols
-    fTokenID := tkSymbol;
-    Inc(Run, Count);  // Include all underscores in the token
-  end
-  else if Count = 3 then
-  begin
-    // Bold+Italic
-    fTokenID := tkBold;
-    inc(Run, 3);
-    while not (fLine[Run] in [#0, #10, #13]) and
-          not ((fLine[Run] = '*') and (fLine[Run+1] = '*') and (fLine[Run+2] = '*')) do
-      inc(Run);
-    if (fLine[Run] = '*') and (fLine[Run+1] = '*') and (fLine[Run+2] = '*') then
-      inc(Run, 3);
-  end
-  else if Count = 2 then
-  begin
-    // Bold
-    fTokenID := tkBold;
-    inc(Run, 2);
-    while not (fLine[Run] in [#0, #10, #13]) and
-          not ((fLine[Run] = '*') and (fLine[Run+1] = '*')) do
-      inc(Run);
-    if (fLine[Run] = '*') and (fLine[Run+1] = '*') then
-      inc(Run, 2);
-  end
-  else if Count = 1 then
-  begin
-    // Italic or list item
-    if (fLine[Run+1] = #32) then
-    begin
-      // List item
-      fTokenID := tkListItem;
-      inc(Run);
-      if fLine[Run] = ' ' then inc(Run);
-    end
-    else
-    begin
-      // Italic
-      fTokenID := tkItalic;
-      inc(Run);
-      while not (fLine[Run] in [#0, #10, #13, '*']) do
-        inc(Run);
-      if fLine[Run] = '*' then inc(Run);
-    end;
-  end;
+  FormatProc('*');
 end;
 
 procedure TSynMarkdownSyn.NumberSignProc;
@@ -502,17 +564,14 @@ end;
 procedure TSynMarkdownSyn.PlusProc;
 begin
   // Check if it's a list item
-  if (Run = 0) or (fLine[Run-1] in [#9, #32]) then
+  if (Run = 0) and (fLine[Run+1] = #32) then
   begin
     fTokenID := tkListItem;
     inc(Run);
-    if fLine[Run] = ' ' then inc(Run);
   end
   else
-  begin
-    fTokenID := tkSymbol;
-    inc(Run);
-  end;
+    // Check for ins (++text++)
+    TwoSymbolsProc('+', tkUnderline);
 end;
 
 procedure TSynMarkdownSyn.MinusProc;
@@ -591,89 +650,14 @@ begin
 end;
 
 procedure TSynMarkdownSyn.UnderscoreProc;
-var
-  Count: Integer;
 begin
-  // Count consecutive underscores
-  Count := 1;
-  while fLine[Run+Count] = '_' do
-    Inc(Count);
-
-  if Count >= 4 then
-  begin
-    // Treat 4 or more underscores as symbols
-    fTokenID := tkSymbol;
-    Inc(Run, Count);  // Include all underscores in the token
-  end
-  else if Count = 3 then
-  begin
-    // Bold+Italic
-    fTokenID := tkBold;
-    inc(Run, 3);
-    while not (fLine[Run] in [#0, #10, #13]) and
-          not ((fLine[Run] = '_') and (fLine[Run+1] = '_') and (fLine[Run+2] = '_')) do
-      inc(Run);
-    if (fLine[Run] = '_') and (fLine[Run+1] = '_') and (fLine[Run+2] = '_') then
-      inc(Run, 3);
-  end
-  else if Count = 2 then
-  begin
-    // Bold
-    fTokenID := tkBold;
-    inc(Run, 2);
-    while not (fLine[Run] in [#0, #10, #13]) and
-          not ((fLine[Run] = '_') and (fLine[Run+1] = '_')) do
-      inc(Run);
-    if (fLine[Run] = '_') and (fLine[Run+1] = '_') then
-      inc(Run, 2);
-  end
-  else if Count = 1 then
-  begin
-    // Italic
-    fTokenID := tkItalic;
-    inc(Run);
-    while not (fLine[Run] in [#0, #10, #13, '_']) do
-      inc(Run);
-    if fLine[Run] = '_' then inc(Run);
-  end;
+  FormatProc('_');
 end;
 
 procedure TSynMarkdownSyn.TildeProc;
 begin
   // Check for strikethrough (~~text~~)
-  if fLine[Run+1] = '~' then
-  begin
-    // We don't have a specific attribute for strikethrough, using bold for now
-    fTokenID := tkBold;
-    inc(Run, 2);
-    while not (fLine[Run] in [#0, #10, #13]) and
-          not ((fLine[Run] = '~') and (fLine[Run+1] = '~')) do
-      inc(Run);
-    if (fLine[Run] = '~') and (fLine[Run+1] = '~') then
-      inc(Run, 2);
-  end
-  else
-  begin
-    fTokenID := tkSymbol;
-    inc(Run);
-  end;
-end;
-
-procedure TSynMarkdownSyn.PipeProc;
-begin
-  // Check for table row
-  if (Run = 0) or (fLine[Run-1] in [#9, #32]) then
-  begin
-    fTokenID := tkSymbol;
-    // Tables are highlighted as symbols for now
-    while not (fLine[Run] in [#0, #10, #13]) do
-      inc(Run);
-  end
-  else
-  begin
-    fTokenID := tkSymbol;
-    inc(Run);
-  end;
+  TwoSymbolsProc('~', tkStrikeOut);
 end;
 
 procedure TSynMarkdownSyn.LessThanProc;
@@ -745,6 +729,12 @@ begin
     end;
     Inc(Run);
   end;
+end;
+
+procedure TSynMarkdownSyn.MarkProc;
+begin
+  // Check for Mark (==text==)
+  TwoSymbolsProc('=', tkMark);
 end;
 
 procedure TSynMarkdownSyn.LinkImageProc(ImageFlag: Boolean);
