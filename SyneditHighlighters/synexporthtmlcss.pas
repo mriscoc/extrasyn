@@ -50,7 +50,7 @@ uses Dialogs,
   {$endif}
   Classes, SysUtils,
   LCLIntf, LCLType, Graphics, ClipBrd,
-  SynEditHighlighter, SynEditExport, LazUtf8, SynEditStrConst;
+  LazEditTextAttributes, SynEditExport, LazUtf8, SynEditStrConst;
 
   type
 
@@ -87,8 +87,8 @@ uses Dialogs,
 {end}                                                                           //mh 2000-10-10
     procedure FormatBeforeFirstAttributeImmediate(BG, FG: TColor); override;
     procedure FormatAfterLastAttributeImmediate; override;
-    procedure FormatAttributeInitImmediate(Attri: TSynHighlighterAttributes; IsSpace: Boolean); override;
-    procedure FormatAttributeDoneImmediate(Attri: TSynHighlighterAttributes; IsSpace: Boolean); override;
+    procedure FormatAttributeInitImmediate(Attri: TLazCustomEditTextAttribute; IsSpace: Boolean); override;
+    procedure FormatAttributeDoneImmediate(Attri: TLazCustomEditTextAttribute; IsSpace: Boolean); override;
 
     procedure FormatNewLine; override;
     function GetFooter: string; override;
@@ -128,6 +128,7 @@ const
   CodeStart = '<pre><code class="%s">';
   CodeEnd = '</code></pre>';
   FontEnd = '</font>';
+  SpanEnd = '</span>';
   WinClipHeaderFmt = 'Version:0.9' + LineEnding +
                      'StartHTML:%.8d' + LineEnding +
                      'EndHTML:%.8d' + LineEnding +
@@ -314,9 +315,9 @@ begin
   if fsBold in fLastStyle then
     AddData('</b>');
   if fLastFG <> fFont.Color then
-    AddData('</font>');
+    AddData(FontEnd);
   if UseBackground and (fLastBG <> fBackgroundColor) then
-    AddData('</span>');
+    AddData(SpanEnd);
 end;
 
 procedure TSynExporterHTMLCSS.FormatAttributeDone(BackgroundChanged,
@@ -334,9 +335,9 @@ begin
       AddData('</b>');
   end;
   if (BackgroundChanged or ForegroundChanged) and (fLastFG <> fFont.Color) then //mh 2000-10-10
-    AddData('</font>');
+    AddData(FontEnd);
   if BackgroundChanged then
-    AddData('</span>');
+    AddData(SpanEnd);
 end;
 
 procedure TSynExporterHTMLCSS.FormatAttributeInit(BackgroundChanged,
@@ -401,11 +402,11 @@ begin
   SendDebug('TSynExporterHTMLCSS.FormatAfterLastAttributeImmediate');
   {$endif}
   if (heoFragmentOnly in Options) then
-    AddData('</span>');
+    AddData(SpanEnd);
 end;
 
 procedure TSynExporterHTMLCSS.FormatAttributeInitImmediate(
-  Attri: TSynHighlighterAttributes; IsSpace: Boolean);
+  Attri: TLazCustomEditTextAttribute; IsSpace: Boolean);
 var
   Span, StyleStr: String;
   FG, BG: TColor;
@@ -429,7 +430,7 @@ begin
 end;
 
 procedure TSynExporterHTMLCSS.FormatAttributeDoneImmediate(
-  Attri: TSynHighlighterAttributes; IsSpace: Boolean);
+  Attri: TLazCustomEditTextAttribute; IsSpace: Boolean);
 var
   FG, BG: TColor;
   StyleStr: String;
@@ -448,7 +449,7 @@ begin
   if (not IsSpace and (FG <> fFont.Color)) or
      (UseBackGround and (BG <> fbackGroundColor)) then
   begin
-    AddData('</span>');
+    AddData(SpanEnd);
   end;
 
 end;

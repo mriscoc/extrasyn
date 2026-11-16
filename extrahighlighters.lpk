@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="5">
+  <Package Version="6">
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters"/>
     <Author Value="Various authors, see each highlighter source file for more info."/>
@@ -24,9 +24,14 @@
           <StackChecks Value="True"/>
         </Checks>
         <VerifyObjMethodCallValidity Value="True"/>
+        <Optimizations>
+          <OptimizationLevel Value="0"/>
+        </Optimizations>
       </CodeGeneration>
       <Linking>
         <Debugging>
+          <GenerateDebugInfo Value="False"/>
+          <RunWithoutDebug Value="True"/>
           <UseHeaptrc Value="True"/>
           <TrashVariables Value="True"/>
         </Debugging>
@@ -35,206 +40,209 @@
         <CompilerMessages>
           <IgnoredMessages idx5027="True" idx5024="True" idx4055="True"/>
         </CompilerMessages>
+        <CustomOptions Value="$(IDEBuildOptions)"/>
+        <OtherDefines Count="1">
+          <Define0 Value="DEBUG"/>
+        </OtherDefines>
       </Other>
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>
-    <Version Major="1" Minor="4" Release="2" Build="5"/>
-    <Files Count="46">
-      <Item1>
+    <Version Major="1" Minor="5" Release="1" Build="10"/>
+    <Files>
+      <Item>
         <Filename Value="SyneditHighlighters\syneditstrconstextra.pas"/>
         <UnitName Value="SynEditStrConstExtra"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighteradsp21xx.pas"/>
         <UnitName Value="SynHighlighterADSP21xx"/>
-      </Item2>
-      <Item3>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterasm.pas"/>
         <UnitName Value="SynHighlighterAsm"/>
-      </Item3>
-      <Item4>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterawk.pas"/>
         <UnitName Value="SynHighlighterAWK"/>
-      </Item4>
-      <Item5>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterbaan.pas"/>
         <UnitName Value="SynHighlighterBaan"/>
-      </Item5>
-      <Item6>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightercac.pas"/>
         <UnitName Value="SynHighlighterCAC"/>
-      </Item6>
-      <Item7>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightercache.pas"/>
         <UnitName Value="SynHighlighterCache"/>
-      </Item7>
-      <Item8>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightercobol.pas"/>
         <UnitName Value="SynHighlighterCobol"/>
-      </Item8>
-      <Item9>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightercs.pas"/>
         <UnitName Value="SynHighlighterCS"/>
-      </Item9>
-      <Item10>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterdml.pas"/>
         <UnitName Value="SynHighlighterDml"/>
-      </Item10>
-      <Item11>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterdot.pas"/>
         <UnitName Value="SynHighlighterDOT"/>
-      </Item11>
-      <Item12>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightereiffel.pas"/>
         <UnitName Value="SynHighlighterEiffel"/>
-      </Item12>
-      <Item13>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterfortran.pas"/>
         <UnitName Value="SynHighlighterFortran"/>
-      </Item13>
-      <Item14>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterfoxpro.pas"/>
         <UnitName Value="SynHighlighterFoxpro"/>
-      </Item14>
-      <Item15>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightergalaxy.pas"/>
         <UnitName Value="SynHighlighterGalaxy"/>
-      </Item15>
-      <Item16>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightergws.pas"/>
         <UnitName Value="SynHighlighterGWS"/>
-      </Item16>
-      <Item17>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterhaskell.pas"/>
         <UnitName Value="SynHighlighterHaskell"/>
-      </Item17>
-      <Item18>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterhp48.pas"/>
         <UnitName Value="SynHighlighterHP48"/>
-      </Item18>
-      <Item19>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighteridl.pas"/>
         <UnitName Value="SynHighlighterIDL"/>
-      </Item19>
-      <Item20>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterinno.pas"/>
         <UnitName Value="SynHighlighterInno"/>
-      </Item20>
-      <Item21>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterkix.pas"/>
         <UnitName Value="SynHighlighterKix"/>
-      </Item21>
-      <Item22>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterldraw.pas"/>
         <UnitName Value="SynHighlighterLDraw"/>
-      </Item22>
-      <Item23>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\SynHighlighterLua.pas"/>
         <UnitName Value="SynHighlighterLua"/>
-      </Item23>
-      <Item24>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterm3.pas"/>
         <UnitName Value="SynHighlighterM3"/>
-      </Item24>
-      <Item25>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightermodelica.pas"/>
         <UnitName Value="SynHighlighterModelica"/>
-      </Item25>
-      <Item26>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterprogress.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="SynHighlighterProgress"/>
-      </Item26>
-      <Item27>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\SynHighlighterProlog.pas"/>
         <UnitName Value="SynHighlighterProlog"/>
-      </Item27>
-      <Item28>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterrc.pas"/>
         <UnitName Value="SynHighlighterRC"/>
-      </Item28>
-      <Item29>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterruby.pas"/>
         <UnitName Value="SynHighlighterRuby"/>
-      </Item29>
-      <Item30>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightersdd.pas"/>
         <UnitName Value="SynHighlighterSDD"/>
-      </Item30>
-      <Item31>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightersml.pas"/>
         <UnitName Value="SynHighlighterSml"/>
-      </Item31>
-      <Item32>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightertcltk.pas"/>
         <UnitName Value="SynHighlighterTclTk"/>
-      </Item32>
-      <Item33>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterunreal.pas"/>
         <UnitName Value="SynHighlighterUnreal"/>
-      </Item33>
-      <Item34>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightervbscript.pas"/>
         <UnitName Value="SynHighlighterVBScript"/>
-      </Item34>
-      <Item35>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightervrml97.pas"/>
         <UnitName Value="SynHighlighterVrml97"/>
-      </Item35>
-      <Item36>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\SynHighlighter8051.pas"/>
         <UnitName Value="SynHighlighter8051"/>
-      </Item36>
-      <Item37>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighteruri.pas"/>
         <UnitName Value="SynHighlighterURI"/>
-      </Item37>
-      <Item38>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterst.pas"/>
         <UnitName Value="SynHighlighterST"/>
-      </Item38>
-      <Item39>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightergeneral.pas"/>
         <UnitName Value="SynHighlighterGeneral"/>
-      </Item39>
-      <Item40>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightergnuplot.pas"/>
         <UnitName Value="synhighlightergnuplot"/>
-      </Item40>
-      <Item41>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightervhdl.pas"/>
         <UnitName Value="SynHighlighterVHDL"/>
-      </Item41>
-      <Item42>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterverilog.pas"/>
         <UnitName Value="synhighlighterverilog"/>
-      </Item42>
-      <Item43>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlighterjson.pas"/>
         <UnitName Value="SynHighlighterJSON"/>
-      </Item43>
-      <Item44>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synhighlightersmali.pas"/>
         <UnitName Value="SynHighlighterSmali"/>
-      </Item44>
-      <Item45>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\SynHighlighterMarkdown.pas"/>
         <UnitName Value="SynHighlighterMarkdown"/>
-      </Item45>
-      <Item46>
+      </Item>
+      <Item>
         <Filename Value="SyneditHighlighters\synexporthtmlcss.pas"/>
         <UnitName Value="SynExportHTMLCSS"/>
-      </Item46>
+      </Item>
     </Files>
-    <CompatibilityMode Value="True"/>
-    <RequiredPkgs Count="2">
-      <Item1>
+    <RequiredPkgs>
+      <Item>
         <PackageName Value="SynEdit"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <PackageName Value="FCL"/>
-      </Item2>
+      </Item>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

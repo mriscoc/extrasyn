@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="5">
+  <Package Version="6">
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters_Dsgn"/>
     <Type Value="DesignTime"/>
@@ -35,23 +35,22 @@
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL, LGPL DUAL license."/>
-    <Version Major="1" Minor="4" Release="2" Build="5"/>
-    <Files Count="1">
-      <Item1>
+    <Version Major="1" Minor="5" Release="1" Build="10"/>
+    <Files>
+      <Item>
         <Filename Value="uhighlighterreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="uHighlighterReg"/>
-      </Item1>
+      </Item>
     </Files>
-    <CompatibilityMode Value="True"/>
-    <RequiredPkgs Count="2">
-      <Item1>
+    <RequiredPkgs>
+      <Item>
         <PackageName Value="ExtraHighlighters"/>
         <MaxVersion Major="1"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <PackageName Value="FCL"/>
-      </Item2>
+      </Item>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

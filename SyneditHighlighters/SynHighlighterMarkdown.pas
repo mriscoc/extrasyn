@@ -37,6 +37,7 @@ unit SynHighlighterMarkdown;
 interface
 
 uses
+  Dialogs,
   Graphics,
   SynEditTypes,
   SynEditHighlighter,
@@ -174,6 +175,8 @@ implementation
 uses
   SynEditStrConst, SynEditStrConstExtra;
 
+const SpecialChars: set of char = [#0, #10, #13, #32, '*', '_', '`', '#', '[', '!', '<', '>', '~'];
+
 procedure TSynMarkdownSyn.MakeMethodTables;
 var
   I: Char;
@@ -275,9 +278,11 @@ begin
   AddAttribute(fMarkAttri);
 
   fSpaceAttri := TSynHighlighterAttributes.Create(SYNS_AttrSpace);
+  fSpaceAttri.Foreground := clLtGray;
   AddAttribute(fSpaceAttri);
 
   fSymbolAttri := TSynHighlighterAttributes.Create(SYNS_AttrSymbol);
+  fSymbolAttri.Foreground := clBlue;
   AddAttribute(fSymbolAttri);
 
   fCommentAttri := TSynHighlighterAttributes.Create(SYNS_AttrComment);
@@ -312,7 +317,7 @@ end;
 
 function TSynMarkdownSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrUInt(fRange));
 end;
 
 function TSynMarkdownSyn.GetTokenID: TtkTokenKind;
@@ -322,9 +327,7 @@ end;
 
 function TSynMarkdownSyn.GetTokenAttribute: TSynHighlighterAttributes;
 begin
-  if fRange = rsCodeBlock then
-     Result := fCodeBlockAttri
-  else case fTokenID of
+  case fTokenID of
     tkText: Result := fTextAttri;
     tkHeader: Result := fHeaderAttri;
     tkBold: Result := fBoldAttri;
@@ -360,7 +363,10 @@ end;
 procedure TSynMarkdownSyn.Next;
 begin
   fTokenPos := Run;
-  fProcTable[fLine[Run]]();
+  if fRange = rsCodeBlock then
+    CodeBlockProc
+  else
+    fProcTable[fLine[Run]]();
 end;
 
 procedure TSynMarkdownSyn.TwoSymbolsProc(SYM:char; tkFormat:TtkTokenKind);
@@ -415,7 +421,7 @@ begin
   ValidEnd := false;
   while not (ValidEnd or (fLine[ClosingPos] in [#0, #10, #13])) do
   begin
-    if (fLine[ClosingPos] = SYM) then
+    if (fLine[ClosingPos] = SYM) and (fLine[ClosingPos - 1] <> '\') then
     case Count of
       1: ValidEnd := not (fLine[ClosingPos - 1] = ' ') and IsEnd(fLine[ClosingPos + Count]);
       2: ValidEnd := not (fLine[ClosingPos - 1] = ' ') and (fLine[ClosingPos + 1] = SYM) and IsEnd(fLine[ClosingPos + Count]);
@@ -440,12 +446,24 @@ begin
   inc(Run);
 end;
 
+procedure TSynMarkdownSyn.BackslashProc;
+begin
+  // Backslash-escaped
+  fTokenID := tkSymbol;
+  if not (fLine[Run + 1] in [#0, #10, #13]) then
+    Inc(Run,2)
+  else
+    Inc(Run);
+end;
+
 procedure TSynMarkdownSyn.BacktickProc;
 begin
   // Check for code block
   if (fLine[Run+1] = '`') and (fLine[Run+2] = '`') then
   begin
-    CodeBlockProc;
+    fTokenID := tkCodeBlock;
+    fRange := rsCodeBlock;
+    inc(Run, 3);
   end
   else // Handle inline code
   begin
@@ -458,34 +476,30 @@ begin
   end;
 end;
 
-procedure TSynMarkdownSyn.BackslashProc;
-begin
-  // Backslash-escaped
-  if not (fLine[Run + 1] in [#0, #10, #13]) then
-  begin
-    fTokenID := tkText;
-    Inc(Run,2);
-  end;
-end;
-
 procedure TSynMarkdownSyn.CodeBlockProc;
 begin
-  fTokenID := tkCodeBlock;
-  inc(Run, 3);
-  if fRange = rsCodeBlock then
-    fRange := rsText
-  else
-    fRange := rsCodeBlock;
-
-  while not (fLine[Run] in [#0, #10, #13]) do
+  if fLine[Run] = #0 then
+  begin
+    fTokenID := tkNull;
+    Exit;
+  end;
+  if fLine[Run] = #32 then
+  begin
+    SpaceProc();
+    Exit;
+  end;
+  while not (fLine[Run] in [#0, #10, #13, #32]) do
   begin
     if (fLine[Run] = '`') and (fLine[Run+1] = '`') and (fLine[Run+2] = '`') then
     begin
       Inc(Run, 3);
+      fRange := rsText;
+      fTokenID := tkCodeBlock;
       Exit;
     end;
     Inc(Run);
   end;
+  fTokenID := tkCodeBlock;
 end;
 
 procedure TSynMarkdownSyn.BraceOpenProc;
@@ -541,7 +555,7 @@ begin
       Inc(Count);
 
     // Must be followed by space to be a header
-    if (Count > 0) and (fLine[Run+Count] = ' ') then
+    if (Count > 0) and (Count <= 6) and (fLine[Run+Count] in [' ', #9]) then
     begin
       fTokenID := tkHeader;
       // Skip to the end of line to capture the entire header
@@ -705,13 +719,13 @@ begin
   fTokenID := tkText;
 
   // Check if we're already at a special character
-  if fLine[Run] in [#0, #10, #13, #32, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'] then
+  if fLine[Run] in SpecialChars then
     inc(Run)  // Must advance at least one character
   else
   begin
     repeat
       Inc(Run);
-    until fLine[Run] in [#0, #10, #13, #32, '*', '_', '`', '#', '[', '!', '<', '>', '~', '|', '@'];
+    until fLine[Run] in SpecialChars;
   end;
 end;
 
@@ -740,10 +754,8 @@ end;
 procedure TSynMarkdownSyn.LinkImageProc(ImageFlag: Boolean);
 var
   LinkStart, TextEnd, UrlEnd: Integer;
-  HasUrl: Boolean;
 begin
   LinkStart := Run;
-  HasUrl := False;
 
   if ImageFlag then
   begin
@@ -768,7 +780,6 @@ begin
     // Check if URL part exists (...)
     if (fLine[TextEnd+1] = '(') then
     begin
-      HasUrl := True;
       UrlEnd := TextEnd + 2;
       // Find closing parenthesis
       while not (fLine[UrlEnd] in [#0, #10, #13, ')']) do
@@ -819,7 +830,7 @@ end;
 
 procedure TSynMarkdownSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynMarkdownSyn.IsFilterStored: Boolean;
